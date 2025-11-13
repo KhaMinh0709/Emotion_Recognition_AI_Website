@@ -125,7 +125,7 @@ const AudioSummaryCard: React.FC<{ result: AudioSentimentResult | null }> = ({
               )}
             >
               {result.topK.map((k) => {
-                const w = Math.min(100, Math.max(4, Math.round(k.score * 100)));
+                const w = Math.round(k.score * 100);
                 return (
                   <div
                     key={k.label}
