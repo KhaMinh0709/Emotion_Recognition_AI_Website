@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.api import face_routes, audio_routes
+from app.api import face_routes, audio_routes, audio_video_routes
 
 app = FastAPI(title="Emotion Recognition API")
 
@@ -20,6 +20,7 @@ app.add_middleware(
 # Include routers
 app.include_router(face_routes.router, prefix="/face", tags=["Face"])
 app.include_router(audio_routes.router, prefix="/audio", tags=["Audio"])
+app.include_router(audio_video_routes.router, prefix="/audio-video", tags=["Audio-Video Fusion"])
 
 @app.get("/")
 async def root():

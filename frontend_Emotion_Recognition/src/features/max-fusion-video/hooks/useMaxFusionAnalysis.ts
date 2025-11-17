@@ -6,6 +6,7 @@ import {
   ModelScore,
   TimelineItem,
 } from "../utils/mockData";
+import { predictAudioVideoEmotion, formatFusionResult } from "../services/audioVideoClient";
 
 // 1 dòng trong bảng "Analysis Results"
 export type AnalysisRow = {
@@ -196,15 +197,6 @@ export function useMaxFusionAnalysis() {
     setAudioProg(0);
     setVisionProg(0);
     setOverallProg(0);
-
-    // fake progress chạy song song
-    fakeProgressRef.current = window.setInterval(() => {
-      setTextProg((p) => Math.min(0.95, p + Math.random() * 0.06));
-      setAudioProg((p) => Math.min(0.95, p + Math.random() * 0.05));
-      setVisionProg((p) => Math.min(0.95, p + Math.random() * 0.04));
-      setOverallProg((p) => Math.min(0.95, p + Math.random() * 0.03));
-    }, 300);
-
     // show pipeline từng bước
     for (let s = 0; s < 5; s++) {
       setStage(s);
@@ -213,36 +205,44 @@ export function useMaxFusionAnalysis() {
     }
 
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/analyze/video", {
-        method: "POST",
-        body: fd,
-      });
-      if (!res.ok) {
-        throw new Error("backend trả lỗi");
-      }
-      const json = await res.json();
+      // Call the audio-video fusion API
+      const apiResponse = await predictAudioVideoEmotion(file);
+      const fusionResult = formatFusionResult(apiResponse);
 
-      setTimeline(json.timeline ?? []);
-      setOverall(json.overall ?? null);
-      setTranscript(json.transcript ?? null);
+      // Convert to timeline format for UI
+      const timeline: TimelineItem[] = [
+        {
+          t: 0,
+          vision: { label: fusionResult.label, score: fusionResult.score },
+          audio: { label: fusionResult.label, score: fusionResult.score },
+          fused: fusionResult as ModelScore,
+        },
+      ];
 
-      // lấy điểm cuối
-      const last: TimelineItem | undefined = json.timeline?.at(-1);
-      const finalText =
-        json.overall?.by_modality?.text ?? last?.text?.score ?? 0;
-      const finalAudio =
-        json.overall?.by_modality?.audio ?? last?.audio?.score ?? 0;
-      const finalVision =
-        json.overall?.by_modality?.vision ?? last?.vision?.score ?? 0;
-      const finalOverall = json.overall?.score ?? 0;
+      const overall: ModelScore = {
+        label: fusionResult.label,
+        score: fusionResult.score,
+        by_modality: {
+          audio: fusionResult.score,
+          vision: fusionResult.score,
+        },
+      };
+
+      setTimeline(timeline);
+      setOverall(overall);
+      setTranscript(null);
+
+      // Get final scores for animation
+      const finalVideo = fusionResult.score;
+      const finalAudio = fusionResult.score;
+      const finalVision = fusionResult.score;
+      const finalOverall = fusionResult.score;
 
       // animate lên điểm thật
       let tick = 0;
       const anim = window.setInterval(() => {
         tick += 1;
-        setTextProg((p) => Math.min(1, p + (finalText - p) * 0.25));
+        setTextProg((p) => Math.min(1, p + (finalVideo - p) * 0.25));
         setAudioProg((p) => Math.min(1, p + (finalAudio - p) * 0.25));
         setVisionProg((p) => Math.min(1, p + (finalVision - p) * 0.25));
         setOverallProg((p) => Math.min(1, p + (finalOverall - p) * 0.25));
@@ -252,24 +252,26 @@ export function useMaxFusionAnalysis() {
       // đẩy vào bảng
       const row: AnalysisRow = {
         id: crypto.randomUUID(),
-        source: "Upload",
-        label: json.overall?.label ?? "—",
-        confidence: Math.round((json.overall?.score ?? 0) * 100),
+        source: "Audio-Video Fusion",
+        label: fusionResult.label,
+        confidence: Math.round(fusionResult.score * 100),
         latency: 650 + Math.round(Math.random() * 80),
         time: nowStr(),
         raw: {
-          overall: json.overall ?? null,
-          timeline: json.timeline ?? [],
+          overall,
+          timeline,
           byMod: {
-            text: last?.text,
-            audio: last?.audio,
-            vision: last?.vision,
+            text: { label: fusionResult.label, score: fusionResult.score },
+            audio: { label: fusionResult.label, score: fusionResult.score },
+            vision: { label: fusionResult.label, score: fusionResult.score },
           },
         },
       };
       setRows((old) => [row, ...old]);
     } catch (err) {
-      setError("Lỗi khi phân tích video.");
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(`Lỗi phân tích video: ${errorMsg}`);
+      console.error("Analysis error:", err);
     } finally {
       if (fakeProgressRef.current) {
         window.clearInterval(fakeProgressRef.current);

@@ -30,10 +30,8 @@ export default function MaxFusionPage() {
     overall,
     error,
     analyze,
-    runDemo,
 
     // progress (0..1)
-    textProg,
     audioProg,
     visionProg,
     overallProg,
@@ -139,7 +137,7 @@ export default function MaxFusionPage() {
                     Drop video here or click to browse
                   </div>
                   <div className="mt-1 text-sm text-slate-400">
-                    MP4, MOV, WEBM • up to 50MB
+                    MP4, MOV, WEBM, FLV • up to 50MB
                   </div>
                   <input
                     type="file"
@@ -205,13 +203,7 @@ export default function MaxFusionPage() {
             >
               {isRunning ? "Analyzing…" : "Analyze"}
             </button>
-            <button
-              className={tokens.btn.subtle}
-              onClick={runDemo}
-              disabled={isRunning}
-            >
-              Demo
-            </button>
+            {/* Demo button removed per request */}
             <button className={tokens.btn.subtle} onClick={clearAll}>
               Clear
             </button>
@@ -230,7 +222,6 @@ export default function MaxFusionPage() {
         <ResultPanel
           timeline={timeline}
           overall={overall}
-          textProg={textProg}
           audioProg={audioProg}
           visionProg={visionProg}
           overallProg={overallProg}
@@ -374,7 +365,7 @@ export default function MaxFusionPage() {
                 Modality breakdown
               </div>
               <div className="grid gap-3">
-                {(["text", "audio", "vision"] as const).map((m) => (
+                {(["audio", "vision"] as const).map((m) => (
                   <div
                     key={m}
                     className="p-3 rounded-xl bg-slate-900/60 border border-white/10"

@@ -8,11 +8,11 @@ type PipelineStepsProps = {
 };
 
 const LABELS = [
-  "Extract frames (fps=5) & face-crop",
-  "Extract audio & preprocess",
-  "ASR → transcript",
-  "Inference: vision / audio / text",
-  "Fusion → overall",
+  "Extract video frames",
+  "Sample 16 frames & face detection",
+  "Extract audio & mel-spectrogram",
+  "Prepare tensors (video + audio)",
+  "Run AV fusion model",
 ];
 
 export default function PipelineSteps({ stage }: PipelineStepsProps) {

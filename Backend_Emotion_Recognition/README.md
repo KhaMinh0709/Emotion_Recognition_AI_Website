@@ -64,6 +64,8 @@ The API will be available at `http://localhost:8000`
 
 ### Multimodal Fusion
 - POST `/fusion/predict`: Predict emotion using both face and audio inputs
+### Video Conversion (FLV → MP4)
+- POST `/audio-video/convert`: Upload an FLV (or other) video file and receive an MP4 URL for frontend display. The original file is kept in `app/static/uploads` so the model can still use the FLV for inference.
 
 ## Environment Variables
 

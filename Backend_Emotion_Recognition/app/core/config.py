@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # Model paths
     FACE_MODEL_PATH: Path = MODEL_DIR / "faces/face_emotion_model.keras"
     AUDIO_MODEL_PATH: Path = MODEL_DIR / "audio/best_model1_weights.h5"
-    # FUSION_MODEL_PATH: Path = MODEL_DIR / "fusion_model.pth"
+    FUSION_MODEL_PATH: Path = MODEL_DIR / "fusion_video_audio/best_fusion.pth"
     
     # API settings
     MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10MB

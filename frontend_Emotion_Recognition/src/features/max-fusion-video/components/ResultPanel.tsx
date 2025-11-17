@@ -37,11 +37,11 @@ export default function ResultPanel({
     <div className={tokens.card}>
       <h2 className="text-lg font-semibold text-sky-100 mb-4">Results</h2>
 
-      {/* Sparkline */}
+      {/* Sparkline
       <div className="rounded-xl border border-white/10 bg-slate-900/40 p-3">
         <div className="text-slate-400 text-sm mb-1">Fused score timeline</div>
         <Sparkline data={fusedSeries} />
-      </div>
+      </div> */}
 
       {/* Overall */}
       <div className="mt-5">
@@ -64,13 +64,8 @@ export default function ResultPanel({
         </div>
       </div>
 
-      {/* modalities */}
-      <div className="mt-5 grid md:grid-cols-3 gap-3">
-        <ModalityCard
-          title="Text"
-          label={last?.text?.label}
-          confidence={(textProg ?? last?.text?.score) as number}
-        />
+      {/* modalities (text modality removed) */}
+      <div className="mt-5 grid md:grid-cols-2 gap-3">
         <ModalityCard
           title="Audio"
           label={last?.audio?.label}
