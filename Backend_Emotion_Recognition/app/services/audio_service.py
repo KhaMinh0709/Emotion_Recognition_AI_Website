@@ -10,6 +10,7 @@ from fastapi import UploadFile, HTTPException
 from app.core.config import settings
 from app.core.logger import setup_logger
 from app.utils.image_utils import save_upload_file
+from app.core.db import save_result
 
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
@@ -218,27 +219,32 @@ class AudioService:
                 all_emotions = {emotion_labels[i]: float(preds[i]) for i in range(len(emotion_labels))}
                 confidence = float(preds[emotion_labels.index(predicted_emotion)])
 
-                logger.info(f"Predicted emotion: {predicted_emotion}, confidence: {confidence}")
+            logger.info(f"Predicted emotion: {predicted_emotion}, confidence: {confidence}")
 
-                return {
-                    "emotion": predicted_emotion,
-                    "confidence": confidence,
-                    "all_emotions": all_emotions,
-                }
+            # Try to save result to DB (non-fatal) and return analysis id when available
+            analysis_id = None
+            try:
+                filename = getattr(audio_input, "filename", None)
+                analysis_id = await save_result(
+                    "audio",
+                    {
+                        "emotion": predicted_emotion,
+                        "confidence": confidence,
+                        "all_emotions": all_emotions,
+                        "model_name": "audio_cnn",
+                    },
+                    {"filename": filename},
+                )
+            except Exception as e:
+                logger.warning(f"Failed to save audio result to DB: {e}")
 
-            # fallback nếu không có encoder
-            logger.warning("No encoder found, using default emotion order")
-            labels = self.emotions
-            all_emotions = {labels[i]: float(preds[i]) for i in range(min(len(labels), preds.size))}
-            top_idx = int(np.argmax(preds))
-            emotion = labels[top_idx]
-            confidence = float(preds[top_idx])
-
-            return {
-                "emotion": emotion,
+            response = {
+                "emotion": predicted_emotion,
                 "confidence": confidence,
                 "all_emotions": all_emotions,
             }
+            if analysis_id is not None:
+                response["analysis_id"] = int(analysis_id)
 
         except HTTPException:
             raise

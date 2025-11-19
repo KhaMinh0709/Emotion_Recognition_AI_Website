@@ -34,4 +34,22 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+    # Database (SQL Server) settings
+    DB_DRIVER: str = "ODBC Driver 17 for SQL Server"
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 1433
+    DB_NAME: str = "emotion_db"
+    DB_USER: str = "sa"
+    DB_PASSWORD: str = "123456"
+    DB_ECHO: bool = False
+
+    def get_sqlalchemy_url(self) -> str:
+        # Build SQLAlchemy URL for mssql+pyodbc
+        # Example: mssql+pyodbc://user:pass@host:1433/dbname?driver=ODBC+Driver+17+for+SQL+Server
+        driver = self.DB_DRIVER.replace(" ", "+")
+        if self.DB_USER and self.DB_PASSWORD:
+            return f"mssql+pyodbc://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?driver={driver}"
+        # Use trusted connection / integrated authentication if user/password not provided
+        return f"mssql+pyodbc://{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?driver={driver}"
+
 settings = Settings()

@@ -8,7 +8,7 @@ from app.core.logger import setup_logger
 logger = setup_logger(__name__)
 
 # Cảm xúc theo thứ tự từ notebook (id 0..5)
-EMOTION_ORDER = ["ANG", "DIS", "FEA", "HAP", "NEU", "SAD"]
+EMOTION_ORDER = ["angry", "disgust", "fear", "happy", "neutral", "sad"]
 
 
 class VideoEncoder(nn.Module):

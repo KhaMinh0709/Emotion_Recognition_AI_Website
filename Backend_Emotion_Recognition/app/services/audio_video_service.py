@@ -12,6 +12,7 @@ from facenet_pytorch import MTCNN
 
 from app.models.audio_video_model import AudioVideoModel
 from app.core.logger import setup_logger
+from app.core.db import save_result
 
 logger = setup_logger(__name__)
 
@@ -100,6 +101,15 @@ class AudioVideoService:
                 os.remove(tmp_video_path)
             except Exception:
                 pass
+
+            # Try to save result to DB (non-fatal) and attach analysis_id if available
+            try:
+                filename = getattr(video_file, "filename", None)
+                pk = await save_result("audio_video", result, {"filename": filename, "model_name": "fusion_net"})
+                if pk is not None and isinstance(result, dict):
+                    result["analysis_id"] = int(pk)
+            except Exception as e:
+                logger.warning(f"Failed to save audio_video result to DB: {e}")
 
             return result
 

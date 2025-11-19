@@ -7,6 +7,7 @@ from app.utils.image_utils import (
     save_result_image
 )
 from app.core.logger import setup_logger
+from app.core.db import save_result
 
 logger = setup_logger(__name__)
 
@@ -72,6 +73,24 @@ class FaceService:
                 }
             }
             
+            # Save to DB (non-fatal). Return analysis_id if saved.
+            try:
+                filename = getattr(file, "filename", None)
+                pk = await save_result(
+                    "face",
+                    {
+                        "emotion": processed_result["emotion"],
+                        "confidence": processed_result["confidence"],
+                        "all_emotions": processed_result["all_emotions"],
+                        "model_name": "face_cnn",
+                    },
+                    {"filename": filename},
+                )
+                if pk is not None:
+                    processed_result["analysis_id"] = int(pk)
+            except Exception as e:
+                logger.warning(f"Failed to save face result to DB: {e}")
+
             return processed_result
         except Exception as e:
             logger.error(f"Error predicting emotion from cropped face: {e}")
@@ -139,6 +158,25 @@ class FaceService:
                 )
                 # Add result image path to response for uploaded files
                 processed_result["result_image"] = str(result_path)
+
+            # Try to save to DB (non-fatal)
+            try:
+                filename = getattr(image_input, "filename", None)
+                pk = await save_result(
+                    "face",
+                    {
+                        "emotion": processed_result["emotion"],
+                        "confidence": processed_result["confidence"],
+                        "all_emotions": processed_result["all_emotions"],
+                        "face_location": processed_result.get("face_location"),
+                        "model_name": "face_cnn",
+                    },
+                    {"filename": filename},
+                )
+                if pk is not None:
+                    processed_result["analysis_id"] = int(pk)
+            except Exception as e:
+                logger.warning(f"Failed to save face result to DB: {e}")
 
             return processed_result
         except Exception as e:

@@ -13,11 +13,11 @@ export function EmotionSummaryCard({ summary }: EmotionSummaryCardProps) {
   };
 
   const dominantEmotionLabel = summary.dominant_emotion
-    ? EMOTION_LABELS[summary.dominant_emotion as EmotionType]
+    ? (EMOTION_LABELS[summary.dominant_emotion as EmotionType] ?? String(summary.dominant_emotion).replace(/_/g, ' '))
     : 'N/A';
 
   const dominantEmotionColor = summary.dominant_emotion
-    ? EMOTION_COLORS[summary.dominant_emotion as EmotionType]
+    ? (EMOTION_COLORS[summary.dominant_emotion as EmotionType] ?? '#6b7280')
     : '#6b7280';
 
   return (
@@ -27,7 +27,8 @@ export function EmotionSummaryCard({ summary }: EmotionSummaryCardProps) {
           <div className="p-2 rounded-lg bg-gray-700">
             <Smile className="w-5 h-5" style={{ color: dominantEmotionColor }} />
           </div>
-          <span className="text-gray-400 text-sm">Dominant Emotion</span>
+          <span className="text-gray-400 text-sm">Dominant Emotion</span >
+          
         </div>
         <p className="text-2xl font-bold text-white">{dominantEmotionLabel}</p>
       </div>

@@ -245,14 +245,6 @@ export default function AudioSentimentPage(): React.ReactElement {
             <button className={uiTokens.btn.ghost} onClick={clearAll}>
               Clear
             </button>
-
-            <button
-                className={uiTokens.btn.subtle}
-                onClick={runDemo}
-                disabled={loading}
-            >
-              Demo (auto sample)
-            </button>
           </div>
         </div>
 
