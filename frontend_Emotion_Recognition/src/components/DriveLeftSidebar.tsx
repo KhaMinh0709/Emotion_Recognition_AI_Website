@@ -52,7 +52,6 @@ const VISIBLE_ITEMS: SidebarItem[] = [
   { key: "vision-sentiment", label: "Vision Sentiment", icon: Image },
   { key: "max-fusion", label: "Max Fusion (Video)", icon: Film },
   { key: "trash", label: "Trash", icon: Trash2 },
-  { key: "users", label: "Users", icon: Users },
 ];
 
 export interface DriveLeftSidebarProps {

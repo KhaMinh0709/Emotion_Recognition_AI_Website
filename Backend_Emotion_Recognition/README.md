@@ -27,7 +27,6 @@ BACKEND_EMOTION_RECOGNITION/
 ```bash
 cd Backend_Emotion_Recognition
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 ```bash
 .\venv\Scripts\Activate.ps1
