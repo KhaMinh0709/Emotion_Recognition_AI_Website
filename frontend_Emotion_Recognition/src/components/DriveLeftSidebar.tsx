@@ -48,9 +48,9 @@ type SidebarItem = {
 const VISIBLE_ITEMS: SidebarItem[] = [
   { key: "home", label: "Home", icon: HomeIcon },
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { key: "audio-sentiment", label: "Audio Sentiment", icon: Mic },
-  { key: "vision-sentiment", label: "Vision Sentiment", icon: Image },
-  { key: "max-fusion", label: "Max Fusion (Video)", icon: Film },
+  { key: "audio-sentiment", label: "Audio emotion", icon: Mic },
+  { key: "vision-sentiment", label: "Vision emotion", icon: Image },
+  { key: "max-fusion", label: "Fusion (Video)", icon: Film },
   { key: "trash", label: "Trash", icon: Trash2 },
 ];
 
