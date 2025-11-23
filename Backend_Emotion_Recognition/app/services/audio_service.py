@@ -245,6 +245,7 @@ class AudioService:
             }
             if analysis_id is not None:
                 response["analysis_id"] = int(analysis_id)
+            return response
 
         except HTTPException:
             raise

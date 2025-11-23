@@ -10,25 +10,51 @@ const API_ENDPOINT = `${BASE_URL}/audio/predict`;
 export async function analyzeAudioFile(
   file: File
 ): Promise<AudioSentimentResult> {
-  // Convert any audio format to WAV before sending to backend
-  console.log(`Converting ${file.name} (${file.type}) to WAV...`);
-  const wavBlob = await convertToWav(file);
-  console.log(`Converted to WAV: ${wavBlob.size} bytes`);
+  console.log("[analyzeAudioFile] start with file:", file);
+
+  let wavBlob: Blob;
+  try {
+    console.log("[analyzeAudioFile] converting to wav...");
+    wavBlob = await convertToWav(file);
+    console.log("[analyzeAudioFile] converted, size =", wavBlob.size);
+  } catch (err) {
+    console.error("[analyzeAudioFile] convertToWav failed:", err);
+    throw new Error("convertToWav failed: " + (err as any)?.message);
+  }
 
   const fd = new FormData();
   fd.append("file", new File([wavBlob], "audio.wav", { type: "audio/wav" }));
 
   const start = performance.now();
-  const res = await fetch(API_ENDPOINT, { method: "POST", body: fd });
+  let res: Response;
+  try {
+    console.log("[analyzeAudioFile] sending request to", API_ENDPOINT);
+    res = await fetch(API_ENDPOINT, { method: "POST", body: fd });
+  } catch (err) {
+    console.error("[analyzeAudioFile] fetch failed:", err);
+    throw new Error("Network error: " + (err as any)?.message);
+  }
+
   const latency = Math.round(performance.now() - start);
+  console.log("[analyzeAudioFile] response status:", res.status);
+
   if (!res.ok) {
     const errorText = await res.text().catch(() => "");
+    console.error("[analyzeAudioFile] non-OK response:", res.status, errorText);
     throw new Error(`Analyze failed: ${res.status} ${errorText}`);
   }
-  const json = await res.json();
 
-  // Backend returns: {emotion, confidence, all_emotions}
-  // Convert to frontend format: {label, confidence, topK}
+  // Kiểm tra JSON có hợp lệ không
+  let json: any;
+  try {
+    const text = await res.text();
+    console.log("[analyzeAudioFile] raw response text:", text);
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error("[analyzeAudioFile] JSON parse failed:", err);
+    throw new Error("Invalid JSON from server");
+  }
+
   const topK = json.all_emotions
     ? Object.entries(json.all_emotions)
         .map(([label, score]) => ({ label, score: score as number }))
@@ -42,6 +68,7 @@ export async function analyzeAudioFile(
     latency,
   };
 }
+
 
 export async function analyzeAudioBlob(
   blob: Blob

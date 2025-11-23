@@ -20,7 +20,8 @@ export const useAudioAnalysis = () => {
       const res = await analyzeAudioFile(file);
       setResult(res);
     } catch (e) {
-      setError("Kết nối gián đoạn. Thử lại?");
+      console.error("[analyzeFromFile] error:", e);
+      setError("lỗi server!!! Kết nối gián đoạn. Thử lại?");
     } finally {
       setLoading(false);
     }
