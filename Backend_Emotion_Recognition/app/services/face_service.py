@@ -182,7 +182,6 @@ class FaceService:
         except Exception as e:
             logger.error(f"Error predicting emotion: {e}")
             raise HTTPException(status_code=400, detail=str(e))
-    
     async def predict_emotion_batch(self, files: list):
         """Predict emotions from multiple cropped face images (batch processing).
         
@@ -190,38 +189,60 @@ class FaceService:
             files: List of UploadFile objects, each containing a cropped face image
             
         Returns:
-            List of dicts, each with emotion, confidence, and all_emotions for each face
+            List of dicts, each with emotion, confidence, all_emotions, analysis_id
         """
         try:
             if not files or len(files) == 0:
                 return []
-            
+
             # Load all face images into numpy arrays
             face_arrays = []
+            filenames = []  # để lưu DB kèm tên file
+
             for file in files:
-                # Validate file
                 await validate_image(file)
-                
-                # Load image into numpy array
                 face_array = await load_image_into_numpy_array(file)
+
                 face_arrays.append(face_array)
-            
+                filenames.append(getattr(file, "filename", None))
+
             # Batch predict emotions
             results = self.model.predict_emotion_batch(face_arrays)
-            
-            # Process results to ensure all values are JSON serializable
+
             processed_results = []
-            for result in results:
-                processed_result = {
+
+            # Handle each prediction
+            for idx, result in enumerate(results):
+                processed = {
                     "emotion": result["emotion"],
                     "confidence": float(result["confidence"]),
                     "all_emotions": {
                         k: float(v) for k, v in result["all_emotions"].items()
                     }
                 }
-                processed_results.append(processed_result)
-            
+
+                # --- SAVE TO DB (non-fatal) ---
+                try:
+                    pk = await save_result(
+                        "face",
+                        {
+                            "emotion": processed["emotion"],
+                            "confidence": processed["confidence"],
+                            "all_emotions": processed["all_emotions"],
+                            "model_name": "face_cnn",
+                        },
+                        {"filename": filenames[idx]}
+                    )
+                    if pk is not None:
+                        processed["analysis_id"] = int(pk)
+
+                except Exception as e:
+                    logger.warning(f"Failed to save batch face result {idx} to DB: {e}")
+
+                processed_results.append(processed)
+
             return processed_results
+
         except Exception as e:
             logger.error(f"Error predicting emotion batch: {e}")
             raise HTTPException(status_code=400, detail=str(e))
