@@ -1,97 +1,50 @@
-// trash/page/TrashManager.tsx
-import React, { useState } from "react";
-import TrashHeader from "../components/TrashHeader";
-import TrashToolbar from "../components/TrashToolbar";
-import TrashTable from "../components/TrashTable";
-import ConfirmDialog from "../components/ConfirmDialog";
+// trash/components/TrashHeader.tsx
+import React from "react";
 
-import { KEYFRAMES } from "../utils/ui";
-import { useTrashState } from "../hooks/useTrashState";
-import { MOCK_TRASH_ITEMS } from "../service/trashService";
-import type { ConfirmState } from "../utils/types";
-
-const TrashManager: React.FC = () => {
-  const {
-    filteredItems,
-    selectedIds,
-    setSelectedIds,
-    filters,
-    setFilters,
-    restoreItems,
-    deleteItems,
-    emptyTrash,
-  } = useTrashState(MOCK_TRASH_ITEMS);
-
-  const [confirm, setConfirm] = useState<ConfirmState>(null);
-
-  const closeConfirm = () => setConfirm(null);
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-      {/* keyframes cho animation header */}
-      <style>{KEYFRAMES}</style>
-
-      <TrashHeader />
-
-      <TrashToolbar
-        selectedIds={selectedIds}
-        filters={filters}
-        setFilters={setFilters}
-        onRestoreSelected={() =>
-          setConfirm({ action: "restore", ids: selectedIds })
-        }
-        onDeleteSelected={() =>
-          setConfirm({ action: "delete", ids: selectedIds })
-        }
-        onEmptyTrash={() => setConfirm({ action: "empty" })}
-      />
-
-      <div className="mt-4">
-        <TrashTable
-          items={filteredItems}
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-        />
+const TrashHeader: React.FC = () => (
+  <div className="relative overflow-hidden rounded-2xl border border-white/10 mb-6">
+    <div
+      className="absolute inset-0 opacity-75"
+      style={{
+        background:
+          "linear-gradient(90deg,#06b6d4,#4f46e5,#a855f7,#4f46e5,#06b6d4)",
+        backgroundSize: "300% 100%",
+        animation: "moveX 16s linear infinite",
+      }}
+    />
+    <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-[2px]" />
+    <div className="relative px-6 py-7 md:px-10 md:py-9">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/15 grid place-items-center text-sky-300">
+          <svg viewBox="0 0 24 24" className="w-6 h-6">
+            <path
+              d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M6 6l1 14a2 2 0 002 2h6a2 2 0 002-2l1-14"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-sky-50">
+            Trash
+          </h1>
+          <p className="text-slate-200/85">
+            Các mục trong thùng rác sẽ bị xóa vĩnh viễn sau 30 ngày.
+          </p>
+        </div>
       </div>
-
-      {/* Confirm – Restore */}
-      <ConfirmDialog
-        open={!!confirm && confirm.action === "restore"}
-        title={`Khôi phục ${confirm?.ids?.length || 0} mục?`}
-        message="Mục sẽ được đưa về vị trí gốc."
-        confirmLabel="Khôi phục"
-        tone="primary"
-        onClose={closeConfirm}
-        onConfirm={() => {
-          if (confirm?.ids) restoreItems(confirm.ids);
+    </div>
+    <div className="relative h-[3px] rounded-b-2xl overflow-hidden">
+      <div
+        className="absolute top-0 left-[-35%] h-[3px] w-[35%] rounded-full"
+        style={{
+          background: "linear-gradient(90deg,#22d3ee,#a855f7,#22d3ee)",
+          animation: "sweepX 2.8s linear infinite",
         }}
-      />
-
-      {/* Confirm – Delete forever */}
-      <ConfirmDialog
-        open={!!confirm && confirm.action === "delete"}
-        title={`Xóa vĩnh viễn ${confirm?.ids?.length || 0} mục?`}
-        message="Bạn sẽ không thể khôi phục sau khi xóa."
-        confirmLabel="Xóa vĩnh viễn"
-        tone="danger"
-        onClose={closeConfirm}
-        onConfirm={() => {
-          if (confirm?.ids) deleteItems(confirm.ids);
-        }}
-      />
-
-      {/* Confirm – Empty trash */}
-      <ConfirmDialog
-        open={!!confirm && confirm.action === "empty"}
-        title="Dọn sạch thùng rác?"
-        message="Mọi mục trong thùng rác sẽ bị xóa vĩnh viễn."
-        confirmLabel="Dọn sạch"
-        tone="danger"
-        onClose={closeConfirm}
-        onConfirm={emptyTrash}
       />
     </div>
-  );
-};
+  </div>
+);
 
-export default TrashManager;
+export default TrashHeader;
