@@ -97,7 +97,14 @@ function Layout() {
     </div>
   );
 }
-
+  
+/**
+ * App component
+ * 
+ * This component is the top-level component that renders the entire
+ * application. It wraps the Layout component with the Router component
+ * from react-router-dom to enable client-side routing.
+ */
 export default function App() {
   return (
     <Router>

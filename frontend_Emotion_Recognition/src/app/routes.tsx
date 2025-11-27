@@ -10,6 +10,6 @@ export const routes = [
   { path: '/vision-sentiment',      element: lazy(() => import('../features/vision-sentiment/pages/VisionSentimentPage')) },
   { path: '/max-fusion',            element: lazy(() => import('../features/max-fusion-video/pages/MaxFusionPage')) },
 
-  { path: '/trash',                 element: lazy(() => import('../pages/TrashManager')) }
+  { path: '/trash',                 element: lazy(() => import('../features/trash/page/TrashManager')) }
 
 ];
