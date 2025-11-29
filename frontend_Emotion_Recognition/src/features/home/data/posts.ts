@@ -3,8 +3,8 @@
 export type HomePost = { title: string; href?: string; thumb?: string };
 
 export const HOME_POSTS: HomePost[] = [
-  { title: "Sentiment Analysis là gì?", href: "#sentiment-analysis" },
-  { title: "Lý do nên sử dụng Sentiment Analysis?", href: "#ly-do" },
+  { title: "Emotion Analysis là gì?", href: "#emotion-analysis" },
+  { title: "Lý do nên sử dụng Emotion Analysis?", href: "#ly-do" },
   { title: "Cách hoạt động (tóm tắt quy trình)", href: "#cach-hoat-dong" },
   { title: "Các loại hình phân tích cảm xúc", href: "#cac-loai-hinh-pt-cam-xuc" },
   { title: "Ưu điểm và thách thức", href: "#uu-diem-va-thach-thuc" },

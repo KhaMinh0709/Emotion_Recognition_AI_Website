@@ -46,6 +46,17 @@ class AudioService:
         if self.model is not None:
             return self.model
 
+        # Chọn device cho TensorFlow
+        physical_devices = tf.config.list_physical_devices('GPU')
+        if physical_devices:
+            try:
+                tf.config.experimental.set_memory_growth(physical_devices[0], True)
+                logger.info(f"TensorFlow: Using GPU device: {physical_devices[0]}")
+            except Exception as e:
+                logger.warning(f"TensorFlow: Could not set memory growth: {e}")
+        else:
+            logger.info("TensorFlow: Using CPU (no GPU found)")
+
         json_path = settings.MODEL_DIR / "audio" / "CNN_model.json"
         weights_path = settings.MODEL_DIR / "audio" / "best_model1_weights.h5"
 
@@ -170,7 +181,6 @@ class AudioService:
     async def predict(self, audio_input):
         """
         Predict emotion from WAV audio file.
-        Pipeline cố gắng bám sát Colab nhất có thể.
         """
         try:
             model = self._load_model()

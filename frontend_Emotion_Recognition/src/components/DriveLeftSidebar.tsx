@@ -59,7 +59,7 @@ export interface DriveLeftSidebarProps {
   onChange?: (key: ItemKey) => void;
   className?: string;
   onUploadClick?: () => void;
-  onRecord?: (mode: "video" | "audio") => void;
+  onRecord?: (mode: "video" | "audio" | "vision") => void;
 }
 
 export default function DriveLeftSidebar({
@@ -150,23 +150,16 @@ export default function DriveLeftSidebar({
             <div className="text-[11.5px] text-slate-400">Recognition Suite</div>
           </div>
         </div>
-        <button
-          onClick={() => onChange?.("new-analysis")}
-          className="h-10 w-10 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-sky-500 grid place-items-center text-white shadow-lg shadow-fuchsia-500/20 ring-1 ring-white/10 hover:scale-[1.02] transition"
-          aria-label="New analysis"
-        >
-          <Plus className="w-5 h-5" />
-        </button>
       </div>
 
       {/* QUICK ACTIONS */}
       <div className="px-3 pb-4 grid grid-cols-3 gap-2">
         <button
-          onClick={() => (onUploadClick ? onUploadClick() : onChange?.("home"))}
+          onClick={() => (onRecord ? onRecord("vision") : onChange?.("vision-sentiment"))}
           className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-[11.5px] transition-all ring-1 ring-inset ring-white/10"
         >
-          <Upload className="w-5 h-5 text-sky-400" />
-          <span>Upload</span>
+          <Image className="w-5 h-5 text-sky-400" />
+          <span>Image</span>
         </button>
         <button
           onClick={() => (onRecord ? onRecord("video") : onChange?.("max-fusion"))}

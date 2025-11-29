@@ -284,13 +284,13 @@ class AudioVideoService:
                 f"mean={mel_db.mean():.3f}, std={mel_db.std():.3f}"
             )
 
-            # CMVN: per-sample normalization (GIỐNG NOTEBOOK)
+            # CMVN: per-sample normalization 
             mel_db = (mel_db - mel_db.mean()) / (mel_db.std() + 1e-6)
 
-            # Crop or pad to TARGET_MEL_T (EXACT như notebook)
+            # Crop or pad to TARGET_MEL_T 
             mel_db = self._crop_or_pad_mel(mel_db, TARGET_MEL_T, mode="center")
 
-            #  KHÔNG re-normalize lần 2 (Colab không làm bước này)
+            #  KHÔNG re-normalize lần 2 
             logger.debug(
                 f"Mel-spectrogram after crop: mean={mel_db.mean():.6f}, std={mel_db.std():.6f}"
             )

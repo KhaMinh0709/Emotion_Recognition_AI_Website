@@ -13,8 +13,8 @@ type AnimatedHeaderProps = {
 };
 
 const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
-  title = "Audio Sentiment",
-  subtitle = "Nền tảng phân tích cảm xúc cho Audio (mở rộng Text, Vision).",
+  title = "Audio emotion",
+  subtitle = "Nền tảng phân tích cảm xúc cho Audio.",
 }) => (
   <div className="relative overflow-hidden rounded-2xl border border-white/10 mb-8">
     <style>{KEYFRAMES}</style>

@@ -11,8 +11,8 @@ type AnimatedHeaderProps = {
 };
 
 export const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
-  title = "Vision Sentiment",
-  subtitle = "Nền tảng phân tích cảm xúc khuôn mặt (mở rộng Audio, Text).",
+  title = "Vision emotion",
+  subtitle = "Nền tảng phân tích cảm xúc khuôn mặt.",
   badges = ["Glow UI", "Realtime-ready"],
   bgColors = ["#0ea5e9", "#4f46e5", "#8b5cf6", "#4f46e5"],
   lineColors = ["#22d3ee", "#a855f7", "#22d3ee"],

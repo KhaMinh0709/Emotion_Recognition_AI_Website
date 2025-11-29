@@ -102,7 +102,10 @@ class AudioVideoModel:
 
     def __init__(self, model_path: str = None):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        logger.info(f"Using device: {self.device}")
+        if torch.cuda.is_available():
+            logger.info(f"PyTorch: Using GPU device: {torch.cuda.get_device_name(self.device)}")
+        else:
+            logger.info("PyTorch: Using CPU (no GPU found)")
 
         # Tạo model
         self.model = AVEmotionNet(num_classes=len(EMOTION_ORDER))
@@ -165,7 +168,7 @@ class AudioVideoModel:
 
         self.model = self.model.to(self.device)
         self.model.eval()
-        logger.info("[MODEL] SUCCESS: Model ready for inference")
+        logger.info(f"[MODEL] SUCCESS: Model ready for inference on device: {self.device}")
 
     def predict(self, video_tensor: torch.Tensor, audio_tensor: torch.Tensor):
         """

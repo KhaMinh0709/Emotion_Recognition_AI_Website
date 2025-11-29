@@ -16,8 +16,19 @@ class FaceModel:
     os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
     def __init__(self):
         self.emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+        # Chọn device cho TensorFlow
+        physical_devices = tf.config.list_physical_devices('GPU')
+        if physical_devices:
+            try:
+                tf.config.experimental.set_memory_growth(physical_devices[0], True)
+                logger.info(f"TensorFlow: Using GPU device: {physical_devices[0]}")
+            except Exception as e:
+                logger.warning(f"TensorFlow: Could not set memory growth: {e}")
+        else:
+            logger.info("TensorFlow: Using CPU (no GPU found)")
+
         self.model = self._create_model() if not Path(settings.FACE_MODEL_PATH).exists() else self._load_model()
-        
+
         # Load the face detection cascade classifier
         cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
         self.face_cascade = cv2.CascadeClassifier(cascade_path)

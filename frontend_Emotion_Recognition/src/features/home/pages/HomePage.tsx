@@ -1,4 +1,6 @@
 // src/features/home/pages/HomePage.tsx
+// (ĐÃ CHỈNH SỬA: sentiment → emotion)
+
 import React from "react";
 import {
   GraduationCap,
@@ -32,7 +34,6 @@ import { Figure } from "@/features/home/components/Figure";
 import { HomeStyles } from "@/features/home/styles/homeStyles";
 
 export default function HomePage(): React.ReactElement {
-  // lấy list id từ posts
   const sectionIds = HOME_POSTS.map((p) => (p.href || "").replace("#", "")).filter(Boolean);
   const activeId = useScrollSpy(sectionIds, -120);
   useReveal();
@@ -61,7 +62,7 @@ export default function HomePage(): React.ReactElement {
           </h1>
         </div>
 
-        {/* dải chip */}
+        {/* chip */}
         <div className="relative overflow-hidden mb-4 mask-fade">
           <div className="flex gap-3 animate-scroll-x will-change-transform">
             {[...HOME_POSTS, ...HOME_POSTS].map((p, i) => (
@@ -88,44 +89,43 @@ export default function HomePage(): React.ReactElement {
         <div className="lg:col-span-8 space-y-8">
           <Section title="" reveal>
             <p className="text-lg text-gray-300">
-              <b>Sentiment Analysis</b> là nền tảng để mở rộng sang <i>Text</i>, <i>Audio</i>,
-              <i> Vision</i> – hướng tới nhận diện cảm xúc đa phương thức.
+              <b>Emotion Analysis</b> là nền tảng phân tích cảm xúc người dùng – hướng tới nhận diện cảm xúc đa phương thức.
             </p>
             <br />
-            <Figure src="/assets/trang-dau.png" caption="Sentiment Analysis" />
+            <Figure src="/assets/trang-dau.png" caption="Emotion Analysis" />
           </Section>
 
           <Section
-            id="sentiment-analysis"
-            title="Sentiment Analysis là gì?"
+            id="emotion-analysis"
+            title="Emotion Analysis là gì?"
             icon={<Zap className="w-5 h-5 text-blue-400" />}
             reveal
           >
             <p>
-              <b>Phân tích cảm xúc (Sentiment Analysis)</b> là quá trình tự động xác định thái độ – tích
-              cực, tiêu cực hay trung tính – trong văn bản.
+              <b>Emotion Analysis</b> là quá trình tự động xác định và phân loại cảm xúc
+              được thể hiện trong văn bản, giọng nói hoặc hình ảnh.
             </p>
             <br />
-            <Figure src="/assets/hero-sentiment.png" caption="Sentiment Analysis là gì?" />
+            <Figure src="/assets/hero-sentiment.png" caption="Emotion Analysis là gì?" />
           </Section>
 
           <Section
             id="ly-do"
-            title="Lý do nên sử dụng Sentiment Analysis?"
+            title="Lý do nên sử dụng Emotion Analysis?"
             icon={<Sparkles className="w-5 h-5 text-blue-400" />}
             reveal
           >
             <ul className="list-disc pl-5 space-y-2 text-gray-300">
-              <li>Hiểu khách hàng sâu hơn từ hàng nghìn đánh giá/bình luận.</li>
-              <li>Theo dõi danh tiếng thương hiệu thời gian thực.</li>
-              <li>Cải thiện sản phẩm/dịch vụ dựa trên phản hồi thực.</li>
-              <li>Quyết định dựa trên dữ liệu.</li>
-              <li>Phát hiện sớm khủng hoảng.</li>
+              <li>Hiểu khách hàng sâu hơn</li>
+              <li>Theo dõi danh tiếng thương hiệu realtime.</li>
+              <li>Cải thiện sản phẩm/dịch vụ dựa trên cảm xúc thực của người dùng.</li>
+              <li>Quyết định dựa trên dữ liệu cảm xúc.</li>
+              <li>Phát hiện sớm các vấn đề.</li>
             </ul>
             <br />
             <Figure
               src="/assets/sentiment-analysis-1.jpg"
-              caption="Phân loại ý kiến người dùng theo nhóm cảm xúc"
+              caption="Phân loại cảm xúc người dùng theo nhóm"
             />
           </Section>
 
@@ -136,20 +136,16 @@ export default function HomePage(): React.ReactElement {
             reveal
           >
             <ol className="list-decimal pl-5 space-y-2 text-gray-300">
-              <li>Thu thập dữ liệu văn bản.</li>
-              <li>Tiền xử lý (tokenize, stopword, normalize…).</li>
+              <li>Thu thập dữ liệu(video / audio / image).</li>
+              <li>Tiền xử lý dữ liệu.</li>
+              <li>Trích xuất đặc trưng.</li>
+              <li>Nhận diện cảm xúc.</li>
             </ol>
             <br />
             <Figure
               src="/assets/Cach-hoat-dong-cua-cong-cu-Sentiment-Analysis.jpg"
-              caption="Quy trình tổng quát"
+              caption="Quy trình Emotion Analysis"
             />
-            <br />
-            <ol start={3} className="list-decimal pl-5 space-y-2 text-gray-300">
-              <li>Trích xuất đặc trưng.</li>
-              <li>Nhận diện cảm xúc.</li>
-              <li>Phân tích ý định.</li>
-            </ol>
           </Section>
 
           <Section
@@ -160,20 +156,23 @@ export default function HomePage(): React.ReactElement {
           >
             <div className="grid sm:grid-cols-2 gap-4">
               <Card title="Đa mức độ (Fine-grained)" icon={<Gauge className="w-5 h-5" />}>
-                Thang “Rất tiêu cực → Rất tích cực”.
+                Phân loại cảm xúc chi tiết hơn.
               </Card>
               <Card title="Theo khía cạnh (Aspect-based)" icon={<ListChecks className="w-5 h-5" />}>
                 Gắn cảm xúc với thuộc tính cụ thể.
               </Card>
               <Card title="Nhận diện cảm xúc" icon={<HeartPulse className="w-5 h-5" />}>
-                Happy, Sad, Angry, Surprise, Neutral, Fearful, Disgusted…
+                Happy, Sad, Angry, Surprise, Neutral, Fear…
               </Card>
-              <Card title="Phân tích ý định (Intent)" icon={<Radar className="w-5 h-5" />}>
+              <Card title="Phân tích ý định" icon={<Radar className="w-5 h-5" />}>
                 Xác định mục đích dựa trên ngữ cảnh.
               </Card>
             </div>
             <br />
-            <Figure src="/assets/sentiment-analysis-2.jpg" caption="4 dạng Sentiment Analysis chính" />
+            <Figure
+              src="/assets/sentiment-analysis-2.jpg"
+              caption="4 dạng Emotion Analysis chính"
+            />
           </Section>
 
           <Section
@@ -190,18 +189,19 @@ export default function HomePage(): React.ReactElement {
                   <li>Ra quyết định nhanh.</li>
                 </ul>
               </SubCard>
+
               <SubCard title="Thách thức" icon={<BookOpen className="w-5 h-5 text-blue-400" />}>
                 <ul className="list-disc pl-5 space-y-2 text-gray-300">
-                  <li>Mỉa mai/ngữ cảnh.</li>
+                  <li>Mỉa mai / ẩn ý.</li>
                   <li>Thiên lệch dữ liệu.</li>
-                  <li>Cần giám sát dài hạn.</li>
+                  <li>Đa ngữ cảnh trong cảm xúc.</li>
                 </ul>
               </SubCard>
             </div>
             <br />
             <Figure
               src="/assets/Uu-nhuoc-diem-cua-Sentiment-Analysis.png"
-              caption="Ưu – nhược điểm"
+              caption="Ưu – nhược điểm Emotion Analysis"
             />
           </Section>
 
@@ -214,15 +214,15 @@ export default function HomePage(): React.ReactElement {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <AppItem icon={<Users className="w-4 h-4" />} text="Phân tích VoC, CSAT, NPS." />
               <AppItem icon={<Megaphone className="w-4 h-4" />} text="Đo phản hồi truyền thông." />
-              <AppItem icon={<Globe2 className="w-4 h-4" />} text="Social listening & danh tiếng." />
+              <AppItem icon={<Globe2 className="w-4 h-4" />} text="Social listening." />
               <AppItem icon={<Target className="w-4 h-4" />} text="Ưu tiên tính năng." />
-              <AppItem icon={<LineChart className="w-4 h-4" />} text="Market / finance sentiment." />
+              <AppItem icon={<LineChart className="w-4 h-4" />} text="Market / finance emotion." />
               <AppItem icon={<Shield className="w-4 h-4" />} text="Phát hiện khủng hoảng." />
             </div>
             <br />
             <Figure
               src="/assets/Ung-dung-cong-nghe-Sentiment-Analysis-trong-thuc-te.jpg"
-              caption="Ứng dụng thực tế"
+              caption="Ứng dụng Emotion Analysis"
             />
           </Section>
 
@@ -233,8 +233,10 @@ export default function HomePage(): React.ReactElement {
             reveal
           >
             <p className="text-gray-300">
-              <b>Emotion AI Analyzer</b> mở rộng từ văn bản sang đa phương thức: Text, Audio, Vision.
-              Gồm các mô-đun: Text Sentiment, Audio Sentiment, Vision Sentiment, Fused Model, Max Fusion…
+              <b>Emotion AI Analyzer </b>   
+              Gồm các mô-đun: <b>Audio Emotion</b>, <b>Vision Emotion</b>, <b>Fused Emotion Model</b>, <b>Trash Management</b>.  
+              Kết hợp ML truyền thống và Deep Learning hiện đại.  
+              Mục tiêu: Nền tảng phân tích cảm xúc toàn diện, chính xác, realtime.
             </p>
           </Section>
         </div>
@@ -247,10 +249,12 @@ export default function HomePage(): React.ReactElement {
                 <BookOpen className="w-5 h-5 text-blue-400" />
                 <h3 className="font-semibold">Nội dung bài viết này</h3>
               </div>
+
               <ul className="divide-y divide-gray-700">
                 {HOME_POSTS.map((p, i) => {
                   const id = (p.href || "").replace("#", "");
                   const active = id && id === activeId;
+
                   return (
                     <li key={i}>
                       <a
@@ -273,18 +277,18 @@ export default function HomePage(): React.ReactElement {
                             className={active ? "w-4 h-4 text-blue-300" : "w-4 h-4 text-gray-300"}
                           />
                         </div>
+
                         <div className="flex-1">
                           <p
                             className={[
                               "text-sm leading-snug",
-                              active
-                                ? "text-blue-300"
-                                : "text-gray-200 group-hover:text-blue-300",
+                              active ? "text-blue-300" : "text-gray-200 group-hover:text-blue-300",
                             ].join(" ")}
                           >
                             {p.title}
                           </p>
                         </div>
+
                         <ChevronRight
                           className={
                             active
@@ -305,8 +309,8 @@ export default function HomePage(): React.ReactElement {
                 Tuyên bố
               </h4>
               <p className="text-sm text-gray-400">
-                Trang Home tổng hợp kiến thức về Sentiment Analysis để giới thiệu khóa luận.
-                Bố cục tham khảo từ các blog công nghệ; nội dung được biên soạn phù hợp với đề tài nhóm.
+                Trang Home tổng hợp kiến thức về <b>Emotion Analysis</b> để giới thiệu khóa luận.  
+                Bố cục tham khảo từ các blog công nghệ; nội dung đã được biên soạn phù hợp với đề tài nhóm.
               </p>
             </div>
           </div>
