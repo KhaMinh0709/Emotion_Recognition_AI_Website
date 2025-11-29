@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchResultsByDate, generateMockData } from "../services/mockAnalysis";
+import { fetchResultsByDate, generateMockData, setResultTrash } from "../services/mockAnalysis";
 import { EmotionSummaryCard } from "../../../components/EmotionSummaryCard";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { DistributionCard } from "../components/dashboard/DistributionCard";
@@ -24,6 +24,8 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isLoadingDate, setIsLoadingDate] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   // load data từ API khi component mount - lấy dữ liệu hôm nay
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
-    
+
     loadData();
   }, []);
 
@@ -70,18 +72,27 @@ export default function Dashboard() {
     return results.filter((r) => r.timestamp >= start && r.timestamp <= end);
   }, [selected, results]);
 
+  function handleAskDelete(id: string) {
+    setDeleteId(id);
+    setIsConfirmOpen(true);
+  }
+
   // hàm xóa 1 dòng
-  function handleDeleteDetection(id: string) {
-    setMockData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        results: prev.results.filter((r) => r.id !== id),
-      };
-    });
-    if (selected?.id === id) {
-      setSelected(null);
+  async function handleDeleteDetection(id: string) {
+    setIsConfirmOpen(false);
+    const ok = await setResultTrash(id);
+    if (ok) {
+      // Sau khi xóa, reload lại dữ liệu dashboard
+      const todayStr = new Date().toISOString().split('T')[0];
+      const result = await fetchResultsByDate(todayStr);
+      setMockData(result);
+      if (selected?.id === id) {
+        setSelected(null);
+      }
+    } else {
+      alert("Xóa thất bại!");
     }
+    setDeleteId(null);
   }
 
   // hàm load dữ liệu theo ngày
@@ -159,7 +170,7 @@ export default function Dashboard() {
       <DetectionTable
         results={results}
         onSelect={setSelected}
-        onDeleteOne={handleDeleteDetection}
+        onDeleteOne={handleAskDelete}
       />
 
       {selected && (
@@ -176,6 +187,25 @@ export default function Dashboard() {
         onLoadData={handleLoadByDate}
         isLoading={isLoadingDate}
       />
+
+      {isConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
+            <h3 className="text-lg font-bold mb-2">Xác nhận xóa bản ghi?</h3>
+            <p className="mb-4 text-gray-700">Bạn có chắc chắn muốn xóa bản ghi này khỏi dashboard? Thao tác này sẽ chuyển bản ghi vào thùng rác.</p>
+            <div className="flex gap-3 justify-end">
+              <button
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-700"
+                onClick={() => { setIsConfirmOpen(false); setDeleteId(null); }}
+              >Hủy</button>
+              <button
+                className="px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white"
+                onClick={() => deleteId && handleDeleteDetection(deleteId)}
+              >Xóa</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <DashboardStyles />
     </div>

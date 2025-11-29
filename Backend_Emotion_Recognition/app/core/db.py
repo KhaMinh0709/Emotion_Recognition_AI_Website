@@ -33,6 +33,7 @@ results_table = Table(
     Column("timestamp", DateTime, server_default=func.now(), nullable=False),
     Column("payload", Text, nullable=False),
     Column("metadata", Text, nullable=True),
+    Column("trash", Integer, nullable=False, server_default="0"),
 )
 
 
