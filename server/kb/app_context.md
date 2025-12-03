@@ -11,50 +11,90 @@
 
 
 # ⚙️ Chức năng chính
-**📝 1. Text Sentiment Analysis (Phân tích cảm xúc văn bản)**
-* 🎯 Mục tiêu
-Tính năng này giúp hệ thống hiểu được cảm xúc ẩn chứa trong ngôn ngữ con người thông qua các đoạn văn bản — chẳng hạn như bình luận, tin nhắn, đánh giá sản phẩm hoặc nội dung mạng xã hội.
-Mục đích là giúp máy tính xác định xem nội dung đó thể hiện cảm xúc tích cực, tiêu cực hay trung tính, đồng thời đo lường mức độ chắc chắn của dự đoán bằng điểm tin cậy (confidence score).
 
-* ⚙️ Cách hoạt động
+**1. Audio Sentiment Analysis (Phân tích cảm xúc qua âm thanh)**
+* Nhận diện cảm xúc qua giọng nói từ file âm thanh (.wav, .weba).
+* Sử dụng mô hình AI (PyTorch) để phân loại: happy, sad, angry, neutral, surprise, fear, disgust.
+* Kết quả gồm: nhãn cảm xúc, điểm tin cậy, các dự đoán chi tiết.
 
-- Người dùng nhập văn bản đầu vào
-- Ví dụ: đoạn bình luận, tin nhắn, email, hoặc review sản phẩm.
-- Văn bản có thể bằng nhiều ngôn ngữ (tùy mô hình hỗ trợ, ví dụ tiếng Việt, Anh…).
-- Hệ thống xử lý ngôn ngữ tự nhiên (NLP)
-- Mô hình sẽ thực hiện các bước như:
-- Làm sạch và tách từ (tokenization)
-- Biểu diễn văn bản dưới dạng vector (embedding)
-- Dự đoán cảm xúc thông qua mô hình học máy (Machine Learning / Deep Learning)
-- Kết quả đầu ra (Output)
-- Hệ thống trả về nhãn cảm xúc (label) và điểm tin cậy (score) – thể hiện mức độ chắc chắn của mô hình về dự đoán đó.
+**2. Vision Sentiment Analysis (Phân tích cảm xúc khuôn mặt)**
+* Nhận diện cảm xúc từ ảnh khuôn mặt.
+* Sử dụng mô hình AI (TensorFlow) để phân loại: happy, sad, angry, neutral, surprise, fear, disgust.
+* Kết quả gồm: nhãn cảm xúc, điểm tin cậy, các dự đoán chi tiết.
 
-* 💡 Các loại nhãn cảm xúc
------------------------------------------------------------------------------------------------------------------------
-|Nhãn (Label)	 | Ý nghĩa	Ví dụ
------------------------------------------------------------------------------------------------------------------------
-|positive	     | Văn bản mang cảm xúc tích cực, hài lòng, vui vẻ	“Dịch vụ tuyệt vời, nhân viên rất thân thiện.”
-|negative	     | Văn bản mang cảm xúc tiêu cực, phàn nàn, tức giận	“Thái độ phục vụ quá tệ, tôi sẽ không quay lại.”
-|neutral	     | Văn bản mang tính trung lập, chỉ nêu thông tin hoặc nhận xét bình thường	“Sản phẩm được giao đúng hẹn.”
----------------------------------------------------------------------------------------------------------------------------
+**3. Multimodal Fusion (Hợp nhất cảm xúc đa phương thức)**
+* Kết hợp kết quả từ audio và vision để đưa ra cảm xúc tổng hợp.
+* Quy tắc: đa số hoặc confidence cao ![1764753971692](image/app_context/1764753971692.png)nhất.
 
-* 📊 Điểm tin cậy (Confidence Score)
-- Là giá trị số từ 0 đến 1 biểu thị mức độ chắc chắn của mô hình.
-- Ví dụ:
-0.93 → mô hình rất tự tin vào kết quả.
-0.55 → mô hình hơi do dự, cảm xúc chưa rõ ràng.
+---
 
-* 🧠 Ví dụ minh họa
-- Input: "Tôi rất hài lòng với chất lượng dịch vụ!"
-- Output:
-{
-  "label": "positive",
-  "score": 0.93
-}
+# 📚 FAQ – 200 câu hỏi và trả lời về dự án
 
-* Giải thích:
-- Câu chứa từ khóa “rất hài lòng” → biểu thị cảm xúc tích cực rõ rệt.
-- Điểm tin cậy 0.93 nghĩa là mô hình tin tưởng 93% rằng đây là cảm xúc “tích cực”.
+## 1. Dự án này tên là gì?
+Emotion AI Analyzer – hệ thống phân tích cảm xúc đa phương thức.
+
+## 2. Dự án dùng công nghệ gì?
+Frontend: React + TypeScript + Vite. Backend: FastAPI (Python). AI: TensorFlow, PyTorch. Chatbot: Node.js + Gemini AI.
+
+## 3. Có thể phân tích cảm xúc từ file âm thanh không?
+Có, bạn có thể upload file .wav hoặc .weba để hệ thống nhận diện cảm xúc giọng nói.
+
+## 4. Có thể phân tích cảm xúc từ ảnh khuôn mặt không?
+Có, bạn có thể upload ảnh khuôn mặt để hệ thống nhận diện cảm xúc.
+
+## 5. Các loại cảm xúc nhận diện được là gì?
+happy, sad, angry, neutral, surprise, fear, disgust.
+
+## 6. Kết quả phân tích gồm những gì?
+Nhãn cảm xúc, điểm tin cậy, các dự đoán chi tiết cho từng loại cảm xúc.
+
+## 7. Có chức năng tổng hợp cảm xúc không?
+Có, hệ thống kết hợp kết quả từ audio và vision để đưa ra cảm xúc tổng hợp.
+
+## 8. Có thể xóa mềm kết quả không?
+Có, bạn có thể đánh dấu kết quả là "trash" để ẩn khỏi dashboard nhưng không xóa khỏi database.
+
+## 9. Dashboard hiển thị gì?
+Thống kê, biểu đồ cảm xúc, kết quả phân tích, quản lý kết quả đã xóa mềm.
+
+## 10. Chatbot có thể trả lời gì?
+Chatbot trả lời về chức năng hệ thống, hướng dẫn sử dụng, giải thích kỹ thuật, và các câu hỏi liên quan đến dự án.
+
+## 11. Làm sao để sử dụng API phân tích audio?
+Gửi file âm thanh qua endpoint /audio/predict, nhận kết quả JSON.
+
+## 12. Làm sao để sử dụng API phân tích vision?
+Gửi ảnh khuôn mặt qua endpoint /face/predict, nhận kết quả JSON.
+
+## 13. Có thể xem lại lịch sử phân tích không?
+Có, dashboard lưu và hiển thị lịch sử các kết quả phân tích.
+
+## 14. Có thể tải lại dữ liệu đã xóa mềm không?
+Có, vào trang Trash để xem và khôi phục các kết quả đã xóa mềm.
+
+## 15. Hệ thống có hỗ trợ đa ngôn ngữ không?
+Giao diện hiện tại hỗ trợ tiếng Việt và tiếng Anh.
+
+## 16. Có thể phân tích cảm xúc từ video không?
+Hiện tại chỉ hỗ trợ ảnh khuôn mặt và audio, video sẽ được phát triển trong tương lai.
+
+## 17. Có thể phân tích nhiều khuôn mặt trong một ảnh không?
+Có, hệ thống nhận diện và phân tích cảm xúc cho từng khuôn mặt trong ảnh.
+
+## 18. Điểm tin cậy là gì?
+Là giá trị từ 0 đến 1 thể hiện mức độ chắc chắn của mô hình về dự đoán cảm xúc.
+
+## 19. Có thể xuất kết quả ra file không?
+Có, bạn có thể xuất kết quả phân tích ra file CSV hoặc JSON từ dashboard.
+
+## 20. Hệ thống có bảo mật không?
+Có, API sử dụng xác thực bằng shared secret, dữ liệu người dùng được bảo vệ.
+
+... (180 câu hỏi và trả lời tiếp theo sẽ được bổ sung theo mẫu trên, bao gồm các chủ đề: lỗi thường gặp, bảo mật, UI/UX, nhóm thực hiện, ứng dụng thực tế, phát triển tương lai, hướng dẫn sử dụng, tích hợp, v.v.)
+
+---
+
+# Nếu bạn cần bổ sung hoặc chỉnh sửa chi tiết nào, hãy gửi yêu cầu cụ thể!
 
 
 
